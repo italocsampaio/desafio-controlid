@@ -6,22 +6,21 @@
 
 //g++ example.cpp -o example -lcurl  -ljsoncpp
 /**
- * sudo apt install libcurl3 libcurl-openssl1.0-dev
- *
- *
- * :~$ sudo apt-get install libcurl-dev
-:~$ sudo apt-get install libcurl4-openssl-dev
-:~$ sudo apt-get install libcurl4-gnutls-dev
-:~$ sudo apt-get install libjson-c-dev
-:~$ sudo apt-get install libjsoncpp-dev
+ * sudo apt install libcurl3 libcurl-openssl1.0-dev libjsoncpp-dev
  */
 
+/**
+ * Imprime uma mensagem de erro caso a chamada do app seja feita de forma inadequada
+ */
 void print_error()
 {
     std::cerr << "ERRO! Número de parâmetros inválido, entre com 1 ou nenhum parâmetro" << std::endl;
 }
 
 
+/**
+ * Função de callback exigida pela libcurl
+ */
 static size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -29,7 +28,12 @@ static size_t write_callback(void *contents, size_t size, size_t nmemb, void *us
 }
 
 
-std::string download_json()
+/**
+ * Faz o download do conteudo de uma página web a partir da url fornecida
+ * @param url Endereço da página web
+ * @return Conteúdo raw da página
+ */
+std::string download_json(const std::string& url)
 {
     CURL *curl;
     CURLcode res;
@@ -37,7 +41,7 @@ std::string download_json()
     curl = curl_easy_init();
     if(curl)
     {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://jsonplaceholder.typicode.com/users");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &read_buffer);
         res = curl_easy_perform(curl);
@@ -48,9 +52,12 @@ std::string download_json()
 }
 
 
+/**
+ * Imprime de maneira formatada todos os usuários presentes no json
+ */
 void print_formatted_users()
 {
-    std::string json = download_json();
+    std::string json = download_json("https://jsonplaceholder.typicode.com/users");
     std::istringstream iss(json);
 
     Json::Value root;
@@ -85,16 +92,42 @@ void print_formatted_users()
 }
 
 
-void print_formatted_posts(char *user_id)
+/**
+ * Imprime de maneira formatada todos os posts presentes no json de um dado usuário
+ * @param user_id ID do usuário
+ */
+void print_formatted_posts(const std::string &user_id)
 {
-    std::string json = download_json();
+    std::string json = download_json("https://jsonplaceholder.typicode.com/posts");
     std::istringstream iss(json);
 
     Json::Value root;
     iss >> root;
 
-    
+    std::vector<Json::Value> posts;
+    for (auto node : root)
+    {
+        if (node["userId"].asString() == user_id)
+        {
+            posts.push_back(node);
+        }
+    }
 
+    if (posts.empty())
+    {
+        std::cout << "Não foi encontrado nenhum post do usuário " << user_id << std::endl;
+        return;
+    }
+    else
+    {
+        std::cout << "Posts encontrados do usuário " << user_id << ": " << std::endl << std::endl ;
+        for (auto post : posts)
+        {
+            std::cout << post["title"] << std::endl;
+            std::cout << post["body"] << std::endl;
+            std::cout << std::endl;
+        }
+    }
 }
 
 
@@ -117,7 +150,15 @@ int main(int argc, char *argv[])
         }
         case 2:
         {
-            print_formatted_posts(argv[1]);
+            try
+            {
+                print_formatted_posts(argv[1]);
+            }
+            catch (std::exception &e)
+            {
+                std::cerr << e.what() << std::endl;
+            }
+
             break;
         }
         default:
