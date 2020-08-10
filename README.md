@@ -21,12 +21,12 @@ O binário **postprinter** será gerado no mesmo diretório e pode ser executado
 ### Adicionando o pacote a um recipe yocto
 O diretório **meta-controlid** contém uma layer que pode ser adicionada a uma instalação existente do yocto para adicionar o programa a uma imagem linux. Para isso, basta adicionar o diretório meta-controlid à raiz do poky e editar o arquivo bblayers.conf para adicionar a nova layer ao seu build, segue um exemplo:
 
->   BBLAYERS ?= " \\
-    /path/to/yocto/meta \\
-    /path/to/yocto/meta-yocto \\
-    /path/to/yocto/meta-yocto-bsp \\
-    /path/to/yocto/meta-controlid \\
-    "
+>   BBLAYERS ?= " \
+>    /path/to/yocto/meta \
+>    /path/to/yocto/meta-yocto \
+>    /path/to/yocto/meta-yocto-bsp \
+>    /path/to/yocto/meta-controlid \
+>    "
 
 Observe que uma das dependências do pacote postprinter é a lib jsoncpp, que pode ser achado na camada meta-oe da open embedded. Caso essa camada não esteja presente no build atual, é necessário adicioná-la usando o mesmo processo.
 ### Testando o pacote em um build yocto
