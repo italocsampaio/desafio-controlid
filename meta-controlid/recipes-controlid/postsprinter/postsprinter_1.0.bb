@@ -9,10 +9,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
 DEPENDS = "curl jsoncpp"
 RDEPENDS_${PN} = "curl jsoncpp"
 
-#SRCREV = "7cff61dd44bb9be15176bcf3b827e579dec354e3"
-#SRC_URI = "git://github.com/italocsampaio/desafio-controlid.git;branch=develop"
-SRC_URI = "git://github.com/italocsampaio/desafio-controlid.git;branch=feature/adiciona-autotools"
-SRCREV = "8f532e4648e92ae8014367cc58b51d0f1f9a4860"
+SRCREV = "cefcd85d09d692945437ac4312cf5e79af764524"
+SRC_URI = "git://github.com/italocsampaio/desafio-controlid.git;branch=master"
 
 S = "${WORKDIR}/git"
 
