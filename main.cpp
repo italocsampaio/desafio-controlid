@@ -2,7 +2,6 @@
 #include <string>
 #include <sstream>
 #include <curl/curl.h>
-//#include <jsoncpp/json/json.h>
 #include <json/json.h>
 
 //g++ example.cpp -o example -lcurl  -ljsoncpp
