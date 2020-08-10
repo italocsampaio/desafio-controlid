@@ -2,12 +2,8 @@
 #include <string>
 #include <sstream>
 #include <curl/curl.h>
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 
-//g++ example.cpp -o example -lcurl  -ljsoncpp
-/**
- * sudo apt install libcurl3 libcurl-openssl1.0-dev libjsoncpp-dev
- */
 
 /**
  * Imprime uma mensagem de erro caso a chamada do app seja feita de forma inadequada
